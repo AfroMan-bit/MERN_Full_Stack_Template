@@ -1,0 +1,118 @@
+* Open Mongo shell with mongo.exe
+> show dbs 
+(to show all the database available)
+
+> use name_of-databasedb
+(to use the specific database by it's name)
+
+> show tables
+(to show all the tables created)
+
+> db.table_name.find()
+or for example
+> db.students.find().pretty()
+(to show the specific table and all of its documents created)
+
+
+
+C.R.U.D COMMANDS BELOW
+
+* Create a database called 'my_first_db'.
+> db.createCollection("my_first_db")
+
+* Create students collection.
+> db.createCollection("students")
+
+* Each document you insert into this collection should have the following format: 
+({name: STRING, home_state: STRING, lucky_number: NUMBER, birthday: {month: NUMBER, day: NUMBER, year: NUMBER}})
+>  db.students.insert( {name: "Ben", home_state: "Lagos", lucky_number: "57", birthday: {month: "08", day: "05", year: "1991"}} )
+
+* Create 5 students with the appropriate info.
+>  db.students.insert( {name: "Naa", home_state: "DC", lucky_number: "23", birthday: {month: "02", day: "15", year: "1994"}} )
+>  db.students.insert( {name: "Wale", home_state: "Oyo", lucky_number: "20", birthday: {month: "03", day: "17", year: "1999"}} )
+>  db.students.insert( {name: "Ava", home_state: "Maryland", lucky_number: "5", birthday: {month: "05", day: "19", year: "2018"}} )
+>  db.students.insert( {name: "Lola", home_state: "Virgina", lucky_number: "10", birthday: {month: "09", day: "30", year: "1994"}} )
+
+* Get all students.
+> db.students.find()
+or
+> db.students.find().pretty()
+
+* Retrieve all students who are from Maryland (Dojo) or Virgina (Dojo).
+> db.students.find({home_state: "Maryland"}).pretty()
+> db.students.find({home_state: "Virgina"}).pretty()
+
+* Get all students whose lucky number is greater than 10
+> db.students.find({lucky_number: {$gt: 10}})
+or
+> db.students.find({lucky_number: {$gt: 10}}).pretty()
+
+* Get all students whose lucky number is less than 10
+> db.students.find({lucky_number: {$lt: 10}})
+or
+> db.students.find({lucky_number: {$lt: 10}}).pretty()
+
+* Get all students whose lucky number is less than or equal to 10
+> db.students.find({lucky_number: {$lte: 10}})
+or
+> db.students.find({lucky_number: {$lte: 10}}).pretty()
+
+* Get all students whose lucky number is between 20 and 30 (inclusive)
+> db.students.find({lucky_number: {$gte: 20}}).pretty()
+> db.students.find({lucky_number: {$lt: 30}}).pretty()
+
+* Add a field to each student collection called 'interests' that is an ARRAY. 
+It should contain the following entries: 'coding', 'brunch', 'MongoDB'. Do this in ONE operation.
+> db.students.update({name: "Ben"}, {$set: {interests: ["coding", "brunch", "MongoDB"] }})
+> db.students.update({name: "Naa"}, {$set: {interests: ["coding", "brunch", "MongoDB"] }})
+> db.students.update({name: "Ava"}, {$set: {interests: ["coding", "brunch", "MongoDB"] }})
+> db.students.update({name: "Wale"}, {$set: {interests: ["coding", "brunch", "MongoDB"] }})
+> db.students.update({name: "Lola"}, {$set: {interests: ["coding", "brunch", "MongoDB"] }})
+
+* Add some unique interests for each particular student into each of their interest arrays.
+> db.students.update({name: "Ben"}, {$push: {interests: "javascripts" }})
+> db.students.update({name: "Naa"}, {$push: {interests: "python" }})
+> db.students.update({name: "Ava"}, {$push: {interests: "flask" }})
+> db.students.update({name: "Wale"}, {$push: {interests: "react" }})
+> db.students.update({name: "Lola"}, {$push: {interests: "php" }})
+
+* Add the interest 'taxes' into someone's interest array.
+> db.students.update({name: "Ben"}, {$push: {interests: "taxes" }})
+
+* Remove the 'taxes' interest you just added. 
+> db.students.update({name: "Ben"}, {$pop: {interests: (1 or -1) }})
+/////Use 1 for the last item in the array or -1 for the first item.///////
+
+* Remove the following entries: 'coding' from the collection called 'interests' that is an ARRAY. 
+> db.students.update({name: "Ben"}, {$pull: {interests: coding }})
+
+* Remove all students who are from Maryland.
+> db.students.remove({home_state: "Maryland"})
+
+* Remove a student by name.
+> db.students.remove({name: "Naa"} true)
+
+* Remove a student whose lucky number is greater than 5 (JUST ONE)
+> db.students.remove({name: "Lola"}, {lucky_number: {$gt: 5}})
+or
+> db.students.remove({name: "Lola"}, {lucky_number: {$gt: 5}}).pretty()
+
+* Add a field to each student collection called 'number_of_belts' and set it to 0.
+> db.students.update({name: "Ben"}, {$set: {number_of_belts: "0"}})
+> db.students.update({name: "Naa"}, {$set: {number_of_belts: "0"}})
+> db.students.update({name: "Ava"}, {$set: {number_of_belts: "0"}})
+> db.students.update({name: "Wale"}, {$set: {number_of_belts: "0"}})
+> db.students.update({name: "Lola"}, {$set: {number_of_belts: "0"}})
+
+* Increment this field by 1 for all students in Washington (Seattle Dojo).
+
+
+* Rename the 'number_of_belts' field to 'belts_earned'
+> db.students.update({name: "Ben"}, {$set: {$rename: { number_of_belts: belts_earned }}})
+
+* Remove the 'lucky_number' field.
+> db.students.update({name: "Ben"}, $pop:{lucky_number})
+
+* Add a 'updated_on' field, and set the value as the current date.
+> db.students.update({name: "Ben"}, {$set: {$currentDate:{ updated_on: $type: "timestamp" } }}})
+> db.students.update({name: "Ben"}, {$set: {$currentDate:{ updated_on: $type: "date" } }}})
